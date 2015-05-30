@@ -2,55 +2,58 @@
  * C Program for Depth First Binary Tree Search using Recursion
  * source : http://www.sanfoundry.com/c-program-depth-first-search-using-recursion/
  */
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include "../libraire/libft.h"
 
-struct node
+typedef struct	s_node
 {
 	int a;
-	struct node *left;
-	struct node *right;
-};
+	struct s_node *left;
+	struct s_node *right;
+}				t_node;
 
-void generate(struct node **head, int num)
+void generate(t_node **head, int num)
 {
-	struct node *temp = *head, *prev = *head;
+	t_node *tmp = *head, *prev = *head;
 
 	if (*head == NULL)
 	{
-		*head = (struct node *)malloc(sizeof(struct node));
+		*head = (t_node *)malloc(sizeof(t_node));
 		(*head)->a = num;
 		(*head)->left = (*head)->right = NULL;
 	}
 	else
 	{
-		while (temp != NULL)
+		while (tmp != NULL)
 		{
-			if (num > temp->a)
+			if (num > tmp->a)
 			{
-				prev = temp;
-				temp = temp->right;
+				prev = tmp;
+				tmp = tmp->right;
 			}
 			else
 			{
-				prev = temp;
-				temp = temp->left;
+				prev = tmp;
+				tmp = tmp->left;
 			}
 		}
-		temp = (struct node *)malloc(sizeof(struct node));
-		temp->a = num;
+		tmp = (t_node*)malloc(sizeof(t_node));
+		tmp->a = num;
 		if (num >= prev->a)
 		{
-			prev->right = temp;
+			ft_putstr("oui");
+			prev->right = tmp;
 		}
-		else
+		else// if (prev->left != NULL && prev != NULL)
 		{
-			prev->left = temp;
+			ft_putstr("non");
+			prev->left = tmp;
 		}
 	}
 }
 
-void DFS(struct node *head)
+void DFS(t_node *head)
 {
 	if (head)
 	{
@@ -62,11 +65,11 @@ void DFS(struct node *head)
 		{
 			DFS(head->right);
 		}
-		printf("%d  ", head->a);
+		ft_putnbr(head->a);
 	}
 }
 
-void delete(struct node **head)
+void delete(t_node **head)
 {
 	if (*head != NULL)
 	{
@@ -82,32 +85,27 @@ void delete(struct node **head)
 	}
 }
 
-int main()
+int main(int ac, char **av)
 {
-	struct node *head = NULL;
-	int choice = 0, num;
-
-	do
+	if (ac == 1)
 	{
-		printf("\nEnter your choice:\n1. Insert\n2. Perform DFS Traversal\n3. Exit\nChoice: ");
-		scanf("%d", &choice);
-		switch(choice)
-		{
-			case 1:
-				printf("Enter element to insert: ");
-				scanf("%d", &num);
-				generate(&head, num);
-				break;
-			case 2:
-				DFS(head);
-				break;
-			case 3:
-				delete(&head);
-				printf("Memory Cleared\nPROGRAM TERMINATED\n");
-				break;
-			default:
-				printf("Not a valid input, try again\n");
-		}
-	} while (choice != 3);
-	return 0;
+		ft_putstr("Erreur : manque les parametres");
+		return (0);
+	}
+	t_node *head;
+	head = NULL;
+	t_node *tmp;
+
+	int i;
+	i = 1;
+	while (i < ac)
+	{
+		generate(&head, ft_atoi(av[i]));
+		i++;
+	}
+	tmp = head;
+	DFS(tmp);
+	//delete(&head);
+
+	return (0);
 }
